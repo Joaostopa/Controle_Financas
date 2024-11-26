@@ -2,11 +2,10 @@
   "name": "controle-financas",
   "version": "1.0.0",
   "main": "index.js",
-"scripts": {
-  "start": "node app.js",
-  "dev": "nodemon app.js"
-}
-,
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -16,7 +15,8 @@
     "body-parser": "^1.20.3",
     "express": "^4.21.1",
     "fs-extra": "^11.2.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
