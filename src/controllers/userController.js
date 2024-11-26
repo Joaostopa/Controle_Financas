@@ -3,6 +3,7 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+
 const filePath = path.join(__dirname, '../data/users.json');
 
 
@@ -39,10 +40,10 @@ exports.registerUser = async (req, res) => {
     return res.status(400).json({ error: 'E-mail já está em uso!' });
   }
 
-
+  
   const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = {
+  const newUser = {
     id: Date.now(),
     name,
     email,
@@ -53,7 +54,10 @@ exports.registerUser = async (req, res) => {
   users.push(newUser);
   await saveUsers(users);
 
-  res.status(201).json({ message: 'Usuário criado com sucesso!', user: { id: newUser.id, name: newUser.name, email: newUser.email } });
+  res.status(201).json({
+    message: 'Usuário criado com sucesso!',
+    user: { id: newUser.id, name: newUser.name, email: newUser.email },
+  });
 };
 
 
@@ -66,7 +70,6 @@ exports.loginUser = async (req, res) => {
 
   const users = await getUsers();
 
-
   const user = users.find((u) => u.email === email);
   if (!user) {
     return res.status(400).json({ error: 'Usuário não encontrado!' });
@@ -78,8 +81,12 @@ exports.loginUser = async (req, res) => {
     return res.status(400).json({ error: 'Senha inválida!' });
   }
 
-
-  const token = jwt.sign({ id: user.id, role: user.role }, 'secret_key', { expiresIn: '1h' });
+  
+  const token = jwt.sign(
+    { id: user.id, role: user.role }, 
+    process.env.JWT_SECRET,          
+    { expiresIn: '1h' }              
+  );
 
   res.status(200).json({ message: 'Login realizado com sucesso!', token });
 };
