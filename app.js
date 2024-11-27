@@ -5,7 +5,7 @@ const incomeRoutes = require('./src/routes/incomeRoutes');
 const expenseRoutes = require('./src/routes/expenseRoutes'); 
 const app = express();
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./src/docs/swagger.json');
+const swaggerDocument = require('./docs/swager.json');
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
