@@ -4,10 +4,13 @@ const userRoutes = require('./src/routes/userRoutes');
 const incomeRoutes = require('./src/routes/incomeRoutes');
 const expenseRoutes = require('./src/routes/expenseRoutes'); 
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./src/docs/swagger.json');
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(bodyParser.json());
 
-// Rotas
 app.use('/users', userRoutes);
 app.use('/income', incomeRoutes);
 app.use('/expenses', expenseRoutes); 

@@ -1,0 +1,226 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API Controle de Finanças",
+      "description": "Documentação da API para o sistema de controle de finanças.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000",
+        "description": "Servidor Local"
+      }
+    ],
+    "paths": {
+      "/users/register": {
+        "post": {
+          "summary": "Cadastrar um novo usuário",
+          "tags": ["Usuários"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "email": { "type": "string", "format": "email" },
+                    "password": { "type": "string" }
+                  },
+                  "required": ["name", "email", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Usuário criado com sucesso",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Usuário criado com sucesso!",
+                    "user": {
+                      "id": 1,
+                      "name": "João",
+                      "email": "joao@email.com"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na requisição",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "E-mail já está em uso!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/login": {
+        "post": {
+          "summary": "Login de usuário",
+          "tags": ["Usuários"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": { "type": "string", "format": "email" },
+                    "password": { "type": "string" }
+                  },
+                  "required": ["email", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Login bem-sucedido",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Login realizado com sucesso!",
+                    "token": "eyJhbGciOiJIUzI1NiIsInR..."
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro no login",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Usuário não encontrado!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/income": {
+        "post": {
+          "summary": "Criar uma receita",
+          "tags": ["Receitas"],
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "description": { "type": "string" },
+                    "value": { "type": "number" },
+                    "date": { "type": "string", "format": "date" },
+                    "category": { "type": "string" }
+                  },
+                  "required": ["description", "value", "date", "category"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Receita criada com sucesso",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Receita criada com sucesso!",
+                    "newIncome": {
+                      "id": 123456,
+                      "description": "Salário",
+                      "value": 3000,
+                      "date": "2024-11-25",
+                      "category": "Trabalho",
+                      "userId": 1
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Usuário não autenticado",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Token não fornecido!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "summary": "Listar receitas",
+          "tags": ["Receitas"],
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Número máximo de resultados por página",
+              "schema": { "type": "integer", "enum": [5, 10, 30] }
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Número da página",
+              "schema": { "type": "integer" }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Lista de receitas",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "total": 1,
+                    "page": 1,
+                    "limit": 5,
+                    "data": [
+                      {
+                        "id": 123456,
+                        "description": "Salário",
+                        "value": 3000,
+                        "date": "2024-11-25",
+                        "category": "Trabalho",
+                        "userId": 1
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Usuário não autenticado",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Token não fornecido!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+  
