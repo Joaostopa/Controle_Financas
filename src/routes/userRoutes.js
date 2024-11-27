@@ -8,4 +8,8 @@ router.post('/login', userController.loginUser);
 
 router.get('/install', userController.installSystem);
 
+router.delete('/:id', authMiddleware, userController.deleteUser);
+
+router.put('/:id', authMiddleware, userController.updateUser);
+
 module.exports = router;

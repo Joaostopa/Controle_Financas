@@ -157,3 +157,61 @@ exports.createAdmin = async (req, res) => {
     admin: { id: newAdmin.id, name: newAdmin.name, email: newAdmin.email },
   });
 };
+
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Acesso negado! Apenas administradores podem excluir usuários.' });
+  }
+
+  const users = await getUsers();
+
+
+  const userIndex = users.findIndex((user) => user.id === Number(id));
+  if (userIndex === -1) {
+    return res.status(404).json({ error: 'Usuário não encontrado!' });
+  }
+
+ 
+  if (users[userIndex].role === 'admin') {
+    return res.status(403).json({ error: 'Administradores não podem excluir outros administradores.' });
+  }
+
+
+  users.splice(userIndex, 1);
+  await saveUsers(users);
+
+  res.status(200).json({ message: 'Usuário excluído com sucesso!' });
+};
+
+
+exports.updateUser = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, role } = req.body;
+
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Acesso negado! Apenas administradores podem editar dados de outros usuários.' });
+  }
+
+  const users = await getUsers();
+
+
+  const userIndex = users.findIndex((user) => user.id === Number(id));
+  if (userIndex === -1) {
+    return res.status(404).json({ error: 'Usuário não encontrado!' });
+  }
+
+
+  users[userIndex] = {
+    ...users[userIndex],
+    name: name || users[userIndex].name,
+    email: email || users[userIndex].email,
+    role: role || users[userIndex].role, 
+  };
+
+  await saveUsers(users);
+
+  res.status(200).json({ message: 'Dados do usuário atualizados com sucesso!', user: users[userIndex] });
+};
+
