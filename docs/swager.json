@@ -105,6 +105,130 @@
           }
         }
       },
+      "/users/{id}": {
+        "delete": {
+          "summary": "Excluir um usuário",
+          "tags": ["Usuários"],
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "ID do usuário a ser excluído",
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Usuário excluído com sucesso",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Usuário excluído com sucesso!"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Acesso negado",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Acesso negado! Apenas administradores podem excluir usuários."
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Usuário não encontrado",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Usuário não encontrado!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "summary": "Editar dados de um usuário",
+          "tags": ["Usuários"],
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "ID do usuário a ser editado",
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "email": { "type": "string", "format": "email" },
+                    "role": { "type": "string", "enum": ["user", "admin"] }
+                  },
+                  "example": {
+                    "name": "Nome Editado",
+                    "email": "novoemail@email.com",
+                    "role": "user"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Dados do usuário atualizados com sucesso",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Dados do usuário atualizados com sucesso!",
+                    "user": {
+                      "id": 12345,
+                      "name": "Nome Editado",
+                      "email": "novoemail@email.com",
+                      "role": "user"
+                    }
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Acesso negado",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Acesso negado! Apenas administradores podem editar dados de outros usuários."
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Usuário não encontrado",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Usuário não encontrado!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/income": {
         "post": {
           "summary": "Criar uma receita",
